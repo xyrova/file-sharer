@@ -1,0 +1,51 @@
+# kubernetes and deployement related
+k8s-manifests/**/secrets.yaml
+
+# backend related 
+backend/.env*
+backend/target/
+backend/pom.xml.tag
+backend/pom.xml.releaseBackup
+backend/pom.xml.versionsBackup
+backend/pom.xml.next
+backend/release.properties
+backend/dependency-reduced-pom.xml
+backend/buildNumber.properties
+backend/.mvn/timing.properties
+backend/*.log
+
+# frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env*
+frontend/.pnp.*
+frontend/coverage/
+frontend/.DS_Store
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# IDEs and Code Editors
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+nbproject/
+.settings/
+.classpath
+.project
+
+# os related
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+._*
+*.swp
+*~
+
+# extra
+logs/
+*.log
+.env
