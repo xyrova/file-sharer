@@ -23,7 +23,7 @@ import com.lochan.filesharer.model.FileEntity;
 import com.lochan.filesharer.services.FileStorageService;
 
 @RestController
-@CrossOrigin("http://localhost:5173/")
+@CrossOrigin("http://127.0.0.1:3000/")
 public class FileManagerController {
 
     @Autowired
