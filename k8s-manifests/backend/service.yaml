@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-svc
+  namespace: 3-tier-app
+spec:
+  type: ClusterIP
+  selector:
+    app: backend-app
+  ports:
+  - port: 9090
+    targetPort: 9090

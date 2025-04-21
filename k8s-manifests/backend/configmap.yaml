@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: 3-tier-app
+  name: mysql-cfg
+data:
+  database_url: "jdbc:mysql://mysql.crou2weggnl8.ap-south-1.rds.amazonaws.com:3306/fileSharer?createDatabaseIfNotExist=true"

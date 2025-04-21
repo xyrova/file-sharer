@@ -1,5 +1,5 @@
 // Define API URL and endpoints for upload and download
-const API_URL = "http://localhost:8080";
+const API_URL = "http://file.cloud-ninja.xyz:80";
 const UPLOAD_ENDPOINT = "/upload-file";
 const DOWNLOAD_ENDPOINT = "/download";
 

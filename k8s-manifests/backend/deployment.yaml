@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-depl
+  namespace: 3-tier-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-app
+  template:
+    metadata:
+      labels:
+        app: backend-app
+    spec:
+      containers:
+      - name: backend
+        image: 529088299058.dkr.ecr.ap-south-1.amazonaws.com/dev/backend:latest
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 9090
+        env:
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: db_username
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: db_password
+          - name: DB_URL
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-cfg
+                key: database_url
+
+            
+ 
