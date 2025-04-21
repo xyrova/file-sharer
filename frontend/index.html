@@ -3,57 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FileSharer</title>
+  <title>FileSharer - Secure File Sharing</title> <!-- Improved Title -->
   <link rel="stylesheet" href="styles.css">
   <script src="script.js" defer></script>
 </head>
 <body>
   <!-- Page header -->
-  <header>
+  <header class="page-header"> <!-- Added class for specific styling -->
     <h1>FileSharer</h1>
-    <p>Upload and download files securely using 4 digit PIN codes</p>
+    <p>Upload and download files securely using 4-digit PIN codes</p>
   </header>
 
   <!-- Main content -->
   <main class="container">
     <!-- FileSharer Card -->
-    <section class="card file-sharer-card">
-      <h2>Share / Download your files</h2>
+    <section class="card file-sharer-card" aria-labelledby="card-heading"> <!-- Added aria-labelledby -->
+      <h2 id="card-heading">Share or Retrieve Your Files</h2> <!-- Improved heading -->
       <!-- Upload and Download buttons inside the same transparent card -->
-      <button class="file-button" onclick="openModal('uploadModal')">Upload</button>
-      <button class="file-button" onclick="openModal('downloadModal')">Download</button>
+      <div class="card-actions"> <!-- Wrapper for buttons -->
+        <button class="file-button upload-button" onclick="openModal('uploadModal')" aria-label="Upload a file">Upload File</button> <!-- Added class and aria-label -->
+        <button class="file-button download-button" onclick="openModal('downloadModal')" aria-label="Download a file using a PIN">Download File</button> <!-- Added class and aria-label -->
+      </div>
     </section>
   </main>
 
-  <!-- Modal for Upload functionality (hidden initially) -->
-  <div id="uploadModal" class="modal">
+  <!-- Modal for Upload functionality -->
+  <div id="uploadModal" class="modal" aria-labelledby="upload-heading" aria-modal="true" role="dialog"> <!-- Added ARIA attributes -->
     <div class="modal-content">
-      <h2>Upload a File</h2>
-      <input type="file" id="uploadInput">
-      <button onclick="uploadFile()">Upload</button>
-      <p id="uploadStatus"></p>
-      <p class="error-message" id="uploadError" style="color: red;"></p> <!-- Error message container -->
-      <p class="success-message" id="uploadMessage" style="color: green;"></p> <!-- Success message container -->
+      <h2 id="upload-heading">Upload a File</h2>
+      <div class="loading-spinner" id="uploadSpinner" style="display: none;"></div> <!-- Loading Spinner -->
+      <input type="file" id="uploadInput" aria-label="Choose file to upload">
+      <button class="modal-button" onclick="uploadFile()" aria-label="Confirm file upload">Upload</button>
+      <p class="error-message" id="uploadError" aria-live="assertive"></p> <!-- Added aria-live -->
+      <p class="success-message" id="uploadMessage" aria-live="assertive"></p> <!-- Added aria-live -->
       <!-- PIN Display and Copy Button -->
       <div id="pinContainer" style="display:none;">
-        <p>Your download PIN: <span id="downloadPin"></span></p>
-        <button id="copyPinButton" onclick="copyPin()" style="display:inline-block;">Copy</button>
+        <p>Your download PIN: <strong id="downloadPin"></strong></p> <!-- Use strong for emphasis -->
+        <button id="copyPinButton" class="copy-button" onclick="copyPin()" aria-label="Copy download PIN to clipboard">Copy PIN</button> <!-- Added class -->
       </div>
-      <button onclick="closeModal('uploadModal')">Close</button>
+      <button class="modal-button close-button" onclick="closeModal('uploadModal')" aria-label="Close upload dialog">Close</button> <!-- Added class -->
     </div>
   </div>
 
-  <!-- Modal for Download functionality (hidden initially) -->
-  <div id="downloadModal" class="modal">
+  <!-- Modal for Download functionality -->
+  <div id="downloadModal" class="modal" aria-labelledby="download-heading" aria-modal="true" role="dialog"> <!-- Added ARIA attributes -->
     <div class="modal-content">
-      <h2>Download a File</h2>
-      <input type="text" id="pinInput" placeholder="Enter PIN">
-      <button onclick="downloadFile()">Download</button>
-      <p id="downloadStatus"></p>
-      <p class="error-message" id="downloadError" style="color: red;"></p> <!-- Error message container -->
-      <p class="success-message" id="downloadMessage" style="color: green;"></p> <!-- Success message container -->
-      <button onclick="closeModal('downloadModal')">Close</button>
+      <h2 id="download-heading">Download a File</h2>
+      <div class="loading-spinner" id="downloadSpinner" style="display: none;"></div> <!-- Loading Spinner -->
+      <input type="text" id="pinInput" placeholder="Enter 4-digit PIN" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" aria-label="Enter 4-digit PIN for download"> <!-- Added inputmode, pattern, maxlength -->
+      <button class="modal-button" onclick="downloadFile()" aria-label="Confirm file download with PIN">Download</button>
+      <p class="error-message" id="downloadError" aria-live="assertive"></p> <!-- Added aria-live -->
+      <p class="success-message" id="downloadMessage" aria-live="assertive"></p> <!-- Added aria-live -->
+      <button class="modal-button close-button" onclick="closeModal('downloadModal')" aria-label="Close download dialog">Close</button> <!-- Added class -->
     </div>
   </div>
+
+  <!-- Page Footer -->
+  <footer class="page-footer">
+    <p>&copy; 2025 FileSharer. All rights reserved.</p>
+  </footer>
 </body>
 </html>

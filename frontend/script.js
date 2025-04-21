@@ -37,10 +37,13 @@ async function uploadFile() {
   const pinSpan = document.getElementById("downloadPin");
   const pinContainer = document.getElementById("pinContainer");
   const copyPinButton = document.getElementById("copyPinButton");
+  const spinner = document.getElementById("uploadSpinner"); // Get spinner
 
-  // Clear previous messages
+  // Clear previous messages and hide PIN
   errorMsg.textContent = "";
   successMsg.textContent = "";
+  pinContainer.style.display = 'none';
+  copyPinButton.style.display = 'none';
 
   // Check if files are selected
   if (!files.length) {
@@ -53,13 +56,18 @@ async function uploadFile() {
     formData.append("file", files[i]);
   }
 
+  spinner.style.display = 'block'; // Show spinner
+
   try {
     const response = await fetch(`${API_URL}${UPLOAD_ENDPOINT}`, {
       method: "POST",
       body: formData,
     });
 
-    if (!response.ok) throw new Error("Upload failed.");
+    if (!response.ok) {
+        const errorBody = await response.text(); // Try to get error body
+        throw new Error(errorBody || "Upload failed.");
+    }
 
     const pin = await response.text();
     successMsg.textContent = `File(s) uploaded!`;
@@ -69,16 +77,58 @@ async function uploadFile() {
   } catch (err) {
     errorMsg.textContent = `Failed to upload: ${err.message}`;
     console.error(err);
+  } finally {
+    spinner.style.display = 'none'; // Hide spinner regardless of outcome
   }
 }
 
 // Copy pin to clipboard
 function copyPin() {
   const pinText = document.getElementById("downloadPin").textContent;
+  const copyButton = document.getElementById("copyPinButton");
+  const originalButtonText = copyButton.textContent; // Store original text
+  const errorMsg = document.getElementById("uploadError"); // Reusing upload error for simplicity, consider a dedicated element
+
+  // Clear previous copy-related errors
+  if (errorMsg.dataset.source === 'copy') {
+      errorMsg.textContent = "";
+      errorMsg.dataset.source = '';
+  }
+
+  // Check if Clipboard API is available
+  if (!navigator.clipboard) {
+    errorMsg.textContent = "Clipboard API not available in this browser or context.";
+    errorMsg.dataset.source = 'copy'; // Mark the error source
+    console.error("Clipboard API not supported");
+    return;
+  }
+
   navigator.clipboard.writeText(pinText).then(() => {
-    alert('PIN copied to clipboard!');
+    // Provide visual feedback on the button
+    copyButton.textContent = 'Copied!';
+    copyButton.disabled = true; // Briefly disable button
+    copyButton.classList.add('copied'); // Add class for styling feedback
+
+    // Revert button text and style after a short delay
+    setTimeout(() => {
+      copyButton.textContent = originalButtonText;
+      copyButton.disabled = false;
+      copyButton.classList.remove('copied'); // Remove feedback class
+    }, 1500); // Revert after 1.5 seconds
+
   }).catch(err => {
     console.error('Failed to copy PIN:', err);
+    // Display a specific error message for copy failure
+    errorMsg.textContent = "Failed to copy PIN. Please copy it manually.";
+    errorMsg.dataset.source = 'copy'; // Mark the error source
+
+    // Optionally provide visual feedback for failure
+    copyButton.textContent = 'Copy Failed';
+    copyButton.classList.add('copy-failed'); // Add class for styling feedback
+     setTimeout(() => {
+      copyButton.textContent = originalButtonText;
+      copyButton.classList.remove('copy-failed'); // Remove feedback class
+    }, 2000);
   });
 }
 
@@ -87,6 +137,7 @@ async function downloadFile() {
   const pin = document.getElementById("pinInput").value;
   const errorMsg = document.getElementById("downloadError");
   const successMsg = document.getElementById("downloadMessage");
+  const spinner = document.getElementById("downloadSpinner"); // Get spinner
 
   // Clear previous messages
   errorMsg.textContent = "";
@@ -98,23 +149,37 @@ async function downloadFile() {
     return;
   }
 
+  spinner.style.display = 'block'; // Show spinner
+
   try {
     const response = await fetch(`${API_URL}${DOWNLOAD_ENDPOINT}?pin=${pin}`, { method: "GET" });
 
-    if (!response.ok) throw new Error("File not found.");
+    if (!response.ok) {
+        let errorText = "Download failed.";
+        if (response.status === 404) {
+            errorText = "File not found or PIN is invalid.";
+        } else if (response.status === 403) {
+            errorText = "File has expired or already downloaded.";
+        } else {
+             const errorBody = await response.text(); // Try to get error body
+             errorText = errorBody || `Server error: ${response.status}`;
+        }
+        throw new Error(errorText);
+    }
 
     const blob = await response.blob();
     let filename = "downloaded-file";
     const disposition = response.headers.get("content-disposition");
+    // Use the original filename from the backend if available
     const originalName = response.headers.get("x-original-filename");
 
     // Get filename from headers if available
     if (disposition) {
       const match = disposition.match(/filename="?([^"]+)"?/);
-      if (match) filename = match[1];
-    } else if (originalName) {
+      if (match && match[1]) filename = match[1];
+    } else if (originalName) { // Fallback to custom header if content-disposition is missing/malformed
       filename = originalName;
-    }
+    } // <<< Added missing closing brace
 
     // Download the file
     const url = window.URL.createObjectURL(blob);
@@ -124,10 +189,13 @@ async function downloadFile() {
     document.body.appendChild(link);
     link.click();
     link.remove();
+    window.URL.revokeObjectURL(url); // Clean up blob URL
 
     successMsg.textContent = "File downloaded successfully!";
   } catch (err) {
     errorMsg.textContent = `Download failed: ${err.message}`;
     console.error(err);
+  } finally {
+    spinner.style.display = 'none'; // Hide spinner regardless of outcome
   }
 }
