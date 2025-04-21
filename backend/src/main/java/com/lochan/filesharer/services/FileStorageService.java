@@ -1,6 +1,7 @@
 package com.lochan.filesharer.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +23,8 @@ import java.util.Random;
 public class FileStorageService {
 
     // Directory where the files will be saved
-    private static final String STORAGE_DIRECTORY = "/home/psyduck/Documents/Uploded";
+    @Value("${file.storage.directory}")
+    private String storageDirectory;
 
     @Autowired
     private FileRepository fileRepository;
@@ -37,9 +39,10 @@ public class FileStorageService {
         String fileName = System.currentTimeMillis() + "_" + fileToSave.getOriginalFilename();
 
         // Ensure the file path stays within the intended directory (security check)
-        File targetFile = new File(STORAGE_DIRECTORY + File.separator + fileName);
-        if (!Objects.equals(targetFile.getParent(), STORAGE_DIRECTORY)) {
-            throw new UnsupportedFileException("Unsupported filename!");
+        File targetFile = new File(storageDirectory + File.separator + fileName);
+        // Check against the canonical path to prevent path traversal vulnerabilities
+        if (!targetFile.getCanonicalPath().startsWith(new File(storageDirectory).getCanonicalPath())) {
+            throw new UnsupportedFileException("Unsupported filename or path traversal attempt!");
         }
 
         // Copy the file to the storage directory
@@ -90,8 +93,9 @@ public class FileStorageService {
         File fileToDownload = new File(filePath);
 
         // Ensure the file path is valid and within the allowed directory
-        if (!fileToDownload.getCanonicalPath().startsWith(STORAGE_DIRECTORY)) {
-            throw new UnsupportedFileException("Unsupported filename!");
+        // Check against the canonical path to prevent path traversal vulnerabilities
+        if (!fileToDownload.getCanonicalPath().startsWith(new File(storageDirectory).getCanonicalPath())) {
+            throw new UnsupportedFileException("Unsupported filename or path traversal attempt!");
         }
 
         if (!fileToDownload.exists()) {

@@ -97,9 +97,9 @@ function copyPin() {
 
   // Check if Clipboard API is available
   if (!navigator.clipboard) {
-    errorMsg.textContent = "Clipboard API not available in this browser or context.";
+    errorMsg.textContent = "Clipboard access requires a secure connection (HTTPS) or localhost. Please copy the PIN manually.";
     errorMsg.dataset.source = 'copy'; // Mark the error source
-    console.error("Clipboard API not supported");
+    console.error("Clipboard API not supported or context is insecure.");
     return;
   }
 
