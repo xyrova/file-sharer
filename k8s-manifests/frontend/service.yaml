@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-svc
+  namespace: 3-tier-app
+spec:
+  type: ClusterIP
+  selector:
+    app: frontend-app
+  ports:
+  - port: 5173
+    protocol: TCP
+    targetPort: 5173

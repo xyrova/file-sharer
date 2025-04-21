@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-depl
+  namespace: 3-tier-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-app
+  template:
+    metadata:
+      labels:
+        app: frontend-app
+    spec:
+      containers:
+      - name: frontend
+        image: 529088299058.dkr.ecr.ap-south-1.amazonaws.com/dev/frontend:latest
+        resources:
+          limits:
+            memory: "300Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5173
+        env:
+          - name: VITE_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: frontend-cfg
+                key: backend-url 

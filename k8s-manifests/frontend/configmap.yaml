@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-cfg
+  namespace: 3-tier-app
+data:
+  backend-url: http://file.cloud-ninja.xyz:80
