@@ -15,16 +15,16 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: 529088299058.dkr.ecr.ap-south-1.amazonaws.com/dev/frontend:latest
+        image: 529088299058.dkr.ecr.ap-south-1.amazonaws.com/dev/frontend:1.0
         resources:
           limits:
             memory: "300Mi"
             cpu: "500m"
         ports:
-        - containerPort: 5173
-        env:
-          - name: VITE_API_URL
-            valueFrom:
-              configMapKeyRef:
-                name: frontend-cfg
-                key: backend-url 
+        - containerPort: 80
+        # env:
+        #   - name: VITE_API_URL
+        #     valueFrom:
+        #       configMapKeyRef:
+        #         name: frontend-cfg
+        #         key: backend-url 

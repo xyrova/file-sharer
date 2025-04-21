@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FileSharer</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
   <script src="script.js" defer></script>
 </head>
 <body>
   <!-- Page header -->
   <header>
     <h1>FileSharer</h1>
-    <p>Upload and download files securely using 4 digit PIN codes</p>
+    <p>Upload and download files securely using 4-digit PIN codes</p>
   </header>
 
   <!-- Main content -->
@@ -19,39 +19,44 @@
     <!-- FileSharer Card -->
     <section class="card file-sharer-card">
       <h2>Share / Download your files</h2>
-      <!-- Upload and Download buttons inside the same transparent card -->
       <button class="file-button" onclick="openModal('uploadModal')">Upload</button>
       <button class="file-button" onclick="openModal('downloadModal')">Download</button>
     </section>
   </main>
 
-  <!-- Modal for Upload functionality (hidden initially) -->
-  <div id="uploadModal" class="modal">
+  <!-- Upload Modal -->
+  <div id="uploadModal" class="modal" style="display: none;">
     <div class="modal-content">
       <h2>Upload a File</h2>
-      <input type="file" id="uploadInput">
+      <input type="file" id="uploadInput" />
       <button onclick="uploadFile()">Upload</button>
+
       <p id="uploadStatus"></p>
-      <p class="error-message" id="uploadError" style="color: red;"></p> <!-- Error message container -->
-      <p class="success-message" id="uploadMessage" style="color: green;"></p> <!-- Success message container -->
+      <p class="error-message" id="uploadError" style="color: red;"></p>
+      <p class="success-message" id="uploadMessage" style="color: green;"></p>
+
       <!-- PIN Display and Copy Button -->
-      <div id="pinContainer" style="display:none;">
-        <p>Your download PIN: <span id="downloadPin"></span></p>
-        <button id="copyPinButton" onclick="copyPin()" style="display:inline-block;">Copy</button>
+      <div id="pinContainer" style="display: none; margin-top: 1em;">
+        <label for="downloadPin">Your download PIN:</label>
+        <input type="text" id="downloadPin" readonly style="margin-left: 0.5em;" />
+        <button id="copyPinButton" onclick="copyPin()" style="display: inline-block;">Copy</button>
       </div>
+
       <button onclick="closeModal('uploadModal')">Close</button>
     </div>
   </div>
 
-  <!-- Modal for Download functionality (hidden initially) -->
-  <div id="downloadModal" class="modal">
+  <!-- Download Modal -->
+  <div id="downloadModal" class="modal" style="display: none;">
     <div class="modal-content">
       <h2>Download a File</h2>
-      <input type="text" id="pinInput" placeholder="Enter PIN">
+      <input type="text" id="pinInput" placeholder="Enter PIN" />
       <button onclick="downloadFile()">Download</button>
+
       <p id="downloadStatus"></p>
-      <p class="error-message" id="downloadError" style="color: red;"></p> <!-- Error message container -->
-      <p class="success-message" id="downloadMessage" style="color: green;"></p> <!-- Success message container -->
+      <p class="error-message" id="downloadError" style="color: red;"></p>
+      <p class="success-message" id="downloadMessage" style="color: green;"></p>
+
       <button onclick="closeModal('downloadModal')">Close</button>
     </div>
   </div>

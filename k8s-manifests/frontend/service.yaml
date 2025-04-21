@@ -8,6 +8,6 @@ spec:
   selector:
     app: frontend-app
   ports:
-  - port: 5173
+  - port: 80
     protocol: TCP
-    targetPort: 5173
+    targetPort: 80
