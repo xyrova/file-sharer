@@ -1,11 +1,11 @@
-package com.lochan.filesharer.exceptions;
-
-public class EmptyFileException extends NullPointerException {
-  public EmptyFileException() {
-    super("The File is Empty!!");
+  package com.lochan.filesharer.exceptions;
+  
+  public class EmptyFileException extends NullPointerException {
+    public EmptyFileException() {
+      super("The File is Empty!!");
+    }
+  
+    public EmptyFileException(String message) {
+      super(message);
+    }
   }
-
-  public EmptyFileException(String message) {
-    super(message);
-  }
-}
